@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>{{ '编辑司机' if driver else '新增司机' }}</h3>
+<form method="post">
+  <div class="mb-3"><label>姓名</label><input name="name" class="form-control" value="{{ driver.name if driver else '' }}" required></div>
+  <div class="mb-3"><label>电话</label><input name="phone" class="form-control" value="{{ driver.phone if driver else '' }}"></div>
+  <button class="btn btn-primary">保存</button>
+</form>
+{% endblock %}

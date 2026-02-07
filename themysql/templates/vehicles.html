@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>车辆管理</h3>
+
+<div class="mb-2">
+  {% if not (current_user.role and '司机' in current_user.role) %}
+    <a class="btn btn-success" href="{{ url_for('vehicles.add_vehicle') }}">新增车辆</a>
+  {% endif %}
+</div>
+
+<table class="table table-sm">
+  <thead><tr><th>ID</th><th>车牌</th><th>类型</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for v in vehicles %}
+      <tr>
+        <td>{{ v.id }}</td>
+        <td>{{ v.plate_number }}</td>
+        <td>{{ v.type }}</td>
+        <td>{{ v.status }}</td>
+        <td>
+          <a class="btn btn-sm btn-primary" href="{{ url_for('vehicles.edit_vehicle', vid=v.id) }}">编辑</a>
+          {% if not (current_user.role and '司机' in current_user.role) %}
+            <form style="display:inline" method="post" action="{{ url_for('vehicles.delete_vehicle', vid=v.id) }}">
+              <button class="btn btn-sm btn-danger" onclick="return confirm('确认删除?')">删除</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" class="text-center">暂无车辆</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

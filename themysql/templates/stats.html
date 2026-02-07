@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>统计分析 — 查询与导出</h3>
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-2">
+    <label class="form-label">开始日期</label>
+    <input name="start_date" class="form-control" placeholder="YYYY-MM-DD" value="{{ filters.start }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">结束日期</label>
+    <input name="end_date" class="form-control" placeholder="YYYY-MM-DD" value="{{ filters.end }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">车辆</label>
+    <select name="vehicle_id" class="form-select">
+      <option value="">全部</option>
+      {% for v in vehicles %}
+        <option value="{{ v.id }}" {% if filters.vehicle_id==v.id|string %}selected{% endif %}>{{ v.plate_number }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">司机</label>
+    <select name="driver_id" class="form-select">
+      <option value="">全部</option>
+      {% for d in drivers %}
+        <option value="{{ d.id }}" {% if filters.driver_id==d.id|string %}selected{% endif %}>{{ d.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">状态</label>
+    <input name="status" class="form-control" value="{{ filters.status }}">
+  </div>
+  <div class="col-md-2 align-self-end">
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary">查询</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('stats.overview') }}">重置</a>
+    </div>
+  </div>
+</form>
+
+<div class="mb-3">
+  <a class="btn btn-sm btn-outline-primary"
+     href="{{ url_for('stats.overview', start_date=filters.start, end_date=filters.end, vehicle_id=filters.vehicle_id, driver_id=filters.driver_id, status=filters.status, export='tasks') }}">
+    导出任务 CSV（当前筛选）
+  </a>
+  <a class="btn btn-sm btn-outline-primary"
+     href="{{ url_for('stats.overview', start_date=filters.start, end_date=filters.end, vehicle_id=filters.vehicle_id, driver_id=filters.driver_id, status=filters.status, export='accidents') }}">
+    导出事故 CSV（当前筛选）
+  </a>
+</div>
+
+<h5>运营统计</h5>
+<ul>
+  <li>任务总数：{{ total_tasks }}</li>
+  <li>计划里程合计：{{ '%.2f'|format(plan_mileage_sum) }}</li>
+  <li>实际里程合计：{{ '%.2f'|format(real_mileage_sum) }}</li>
+  <li>耗油合计：{{ '%.2f'|format(fuel_used_sum) }}</li>
+</ul>
+
+<h6>按状态统计</h6>
+<ul>
+  {% for st,c in by_status %}
+    <li>{{ st }}: {{ c }}</li>
+  {% else %}
+    <li>无</li>
+  {% endfor %}
+</ul>
+
+<h6>按车辆统计（任务数）</h6>
+<ul>
+  {% for plate,c in by_vehicle %}
+    <li>{{ plate or '未指定' }}: {{ c }}</li>
+  {% else %}
+    <li>无</li>
+  {% endfor %}
+</ul>
+
+<h6>按司机统计（任务数）</h6>
+<ul>
+  {% for name,c in by_driver %}
+    <li>{{ name or '未指定' }}: {{ c }}</li>
+  {% else %}
+    <li>无</li>
+  {% endfor %}
+</ul>
+
+<hr>
+<h5>事故统计</h5>
+<ul>
+  <li>事故总数：{{ acc_count }}</li>
+  <li>事故合计费用：{{ '%.2f'|format(acc_cost) }}</li>
+</ul>
+
+<h6>按车辆统计（事故数）</h6>
+<ul>
+  {% for plate,c in acc_by_vehicle %}
+    <li>{{ plate or '未指定' }}: {{ c }}</li>
+  {% else %}
+    <li>无</li>
+  {% endfor %}
+</ul>
+
+<h6>按司机统计（事故数）</h6>
+<ul>
+  {% for name,c in acc_by_driver %}
+    <li>{{ name or '未指定' }}: {{ c }}</li>
+  {% else %}
+    <li>无</li>
+  {% endfor %}
+</ul>
+{% endblock %}

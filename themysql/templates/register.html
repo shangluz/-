@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <h3>注册新用户</h3>
+    <form method="post">
+      <div class="mb-3"><label>用户名</label><input name="username" class="form-control" required></div>
+      <div class="mb-3"><label>密码</label><input type="password" name="password" class="form-control" required></div>
+      <div class="mb-3"><label>姓名</label><input name="name" class="form-control"></div>
+      <div class="mb-3">
+        <label>角色</label>
+        <select name="role" class="form-select">
+          <option>司机</option><option>管理员</option>
+        </select>
+      </div>
+      <button class="btn btn-success">注册</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

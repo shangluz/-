@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5">
+    <h3>系统登录</h3>
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">用户名</label>
+        <input name="username" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">密码</label>
+        <input type="password" name="password" class="form-control" required>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary">登录</button>
+        <a class="btn btn-link" href="{{ url_for('auth.register') }}">注册</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

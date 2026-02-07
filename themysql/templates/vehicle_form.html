@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>{{ '编辑车辆' if vehicle else '新增车辆' }}</h3>
+<form method="post">
+  <div class="mb-3"><label>车牌号</label><input name="plate_number" class="form-control" value="{{ vehicle.plate_number if vehicle else '' }}" required></div>
+  <div class="mb-3"><label>类型</label><input name="type" class="form-control" value="{{ vehicle.type if vehicle else '' }}" required></div>
+  <div class="mb-3">
+    <label>状态</label>
+    <select name="status" class="form-select">
+      <option {% if vehicle and vehicle.status=='空闲' %}selected{% endif %}>空闲</option>
+      <option {% if vehicle and vehicle.status=='运输中' %}selected{% endif %}>运输中</option>
+      <option {% if vehicle and vehicle.status=='维修' %}selected{% endif %}>维修</option>
+    </select>
+  </div>
+  <button class="btn btn-primary">保存</button>
+</form>
+{% endblock %}

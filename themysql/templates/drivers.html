@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>司机管理</h3>
+
+<div class="mb-2">
+  {% if not (current_user.role and '司机' in current_user.role) %}
+    <a class="btn btn-success" href="{{ url_for('drivers.add_driver') }}">新增司机</a>
+  {% endif %}
+</div>
+
+<table class="table table-sm">
+  <thead><tr><th>ID</th><th>姓名</th><th>电话</th>{% if not (current_user.role and '司机' in current_user.role) %}<th>操作</th>{% endif %}</tr></thead>
+  <tbody>
+    {% for d in drivers %}
+      <tr>
+        <td>{{ d.id }}</td>
+        <td>{{ d.name }}</td>
+        <td>{{ d.phone }}</td>
+        {% if not (current_user.role and '司机' in current_user.role) %}
+        <td>
+          <a class="btn btn-sm btn-primary" href="{{ url_for('drivers.edit_driver', did=d.id) }}">编辑</a>
+          <form style="display:inline" method="post" action="{{ url_for('drivers.delete_driver', did=d.id) }}">
+            <button class="btn btn-sm btn-danger" onclick="return confirm('确认删除?')">删除</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+    {% else %}
+      <tr><td colspan="{% if not (current_user.role and '司机' in current_user.role) %}4{% else %}3{% endif %}" class="text-center">暂无司机</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

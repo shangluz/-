@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="p-4">
+  <h2>欢迎来到运输管理</h2>
+  <p>你好，{{ current_user.name or current_user.username }} 。</p>
+</div>
+{% endblock %}

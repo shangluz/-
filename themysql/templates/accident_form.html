@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>{{ '编辑事故' if accident else '上报事故' }}</h3>
+<form method="post">
+  <div class="mb-3">
+    <label>事故车辆</label>
+    <select name="vehicle_id" class="form-select">
+      <option value="">-- 无 --</option>
+      {% for v in vehicles %}
+        <option value="{{ v.id }}" {% if accident and accident.vehicle_id==v.id %}selected{% endif %}>{{ v.plate_number }}{% if v.type %} ({{ v.type }}){% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label>当事司机</label>
+    <select name="driver_id" class="form-select">
+      <option value="">-- 无 --</option>
+      {% for d in drivers %}
+        <option value="{{ d.id }}" {% if accident and accident.driver_id==d.id %}selected{% endif %}>{{ d.name }}{% if d.phone %} ({{ d.phone }}){% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label>事故时间</label>
+    <input name="accident_time" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS"
+           value="{{ accident.accident_time.strftime('%Y-%m-%d %H:%M:%S') if accident and accident.accident_time else '' }}">
+  </div>
+
+  <div class="mb-3">
+    <label>事故地点</label>
+    <input name="location" class="form-control" value="{{ accident.location if accident else '' }}">
+  </div>
+
+  <div class="mb-3">
+    <label>事故原因</label>
+    <textarea name="reason" class="form-control" rows="3">{{ accident.reason if accident else '' }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label>处理方式</label>
+    <textarea name="handle_method" class="form-control" rows="2">{{ accident.handle_method if accident else '' }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label>处理金额</label>
+    <input name="cost" class="form-control" value="{{ '%.2f'|format(accident.cost) if accident and accident.cost is not none else '' }}">
+  </div>
+
+  <div class="mb-3">
+    <label>对方车号</label>
+    <input name="other_plate" class="form-control" value="{{ accident.other_plate if accident else '' }}">
+  </div>
+
+  <button class="btn btn-primary">保存</button>
+</form>
+{% endblock %}

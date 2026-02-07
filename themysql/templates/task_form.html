@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>{{ '编辑任务' if task else '新增任务' }}</h3>
+<form method="post">
+  <div class="mb-3"><label>客户名称</label><input name="client_name" class="form-control" value="{{ task.client_name if task else '' }}"></div>
+  <div class="mb-3"><label>需要车型</label><input name="need_vehicle_type" class="form-control" value="{{ task.need_vehicle_type if task else '' }}"></div>
+  <div class="mb-3"><label>需要数量</label><input name="need_count" class="form-control" value="{{ task.need_count if task else '' }}"></div>
+  <div class="mb-3"><label>计划里程</label><input name="plan_mileage" class="form-control" value="{{ task.plan_mileage if task and task.plan_mileage is not none else '' }}"></div>
+  <div class="mb-3"><label>计划开始时间</label><input name="plan_start_time" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS" value="{{ task.plan_start_time.strftime('%Y-%m-%d %H:%M:%S') if task and task.plan_start_time else '' }}"></div>
+  <div class="mb-3"><label>计划结束时间</label><input name="plan_end_time" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS" value="{{ task.plan_end_time.strftime('%Y-%m-%d %H:%M:%S') if task and task.plan_end_time else '' }}"></div>
+
+  <div class="mb-3">
+    <label>安排车辆</label>
+    <select name="vehicle_id" class="form-select">
+      <option value="">-- 无 --</option>
+      {% for v in vehicles %}
+        <option value="{{ v.id }}" {% if task and task.vehicle_id==v.id %}selected{% endif %}>{{ v.plate_number }}{% if v.type %} ({{ v.type }}){% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label>安排司机</label>
+    <select name="driver_id" class="form-select">
+      <option value="">-- 无 --</option>
+      {% for d in drivers %}
+        <option value="{{ d.id }}" {% if task and task.driver_id==d.id %}selected{% endif %}>{{ d.name }}{% if d.phone %} ({{ d.phone }}){% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3"><label>实际开始时间</label><input name="real_start_time" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS" value="{{ task.real_start_time.strftime('%Y-%m-%d %H:%M:%S') if task and task.real_start_time else '' }}"></div>
+  <div class="mb-3"><label>实际结束时间</label><input name="real_end_time" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS" value="{{ task.real_end_time.strftime('%Y-%m-%d %H:%M:%S') if task and task.real_end_time else '' }}"></div>
+  <div class="mb-3"><label>实际里程</label><input name="real_mileage" class="form-control" value="{{ task.real_mileage if task and task.real_mileage is not none else '' }}"></div>
+  <div class="mb-3"><label>实际耗油量</label><input name="fuel_used" class="form-control" value="{{ task.fuel_used if task and task.fuel_used is not none else '' }}"></div>
+  <div class="mb-3"><label>状态</label><input name="status" class="form-control" value="{{ task.status if task else '待安排' }}"></div>
+
+  <button class="btn btn-primary">保存</button>
+</form>
+{% endblock %}
